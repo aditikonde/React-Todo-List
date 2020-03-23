@@ -1,53 +1,74 @@
 import React, { Component } from "react";
-import uuid from "uuid";
+// import { default as uuid } from "uuid";
 import "bootstrap/dist/css/bootstrap.min.css";
 import TodoList from "./components/TodoList";
 import TodoInput from "./components/TodoInput";
 
 export default class App extends Component {
   state = {
-    items: [
-      { id: 1, title: "Order Medicines" },
-      { id: 2, title: "Do laundry" }
-    ],
-    // id: uuid(),
+    items: [],
+    id: 0,
     item: "",
     editItem: false
   };
 
   handleSubmit = e => {
-    console.log("handle Submit");
+    e.preventDefault();
+    const itemId = this.state.id + 1;
+    const newItem = {
+      id: itemId,
+      title: this.state.item
+    };
+    const updatedItems = [...this.state.items, newItem];
+    this.setState(
+      {
+        items: updatedItems,
+        item: "",
+        editItem: false,
+        id: itemId
+      },
+      () => console.log(this.state.items)
+    );
   };
+
   handleChange = e => {
-    console.log("handle Change");
+    this.setState({ item: e.target.value });
   };
+
   clearList = () => {
-    console.log("Clear List");
+    this.setState({ items: [] });
   };
   handleDelete = id => {
-    console.log("handle Delete");
+    const list = this.state.items.filter(item => item.id !== id);
+    this.setState({ items: list });
   };
   handleEdit = id => {
-    console.log("handle Edit");
+    const list = this.state.items.filter(item => item.id !== id);
+    const selected = this.state.items.find(item => id === item.id);
+    this.setState({
+      id: id,
+      items: list,
+      item: selected.title,
+      editItem: true
+    });
   };
 
   render() {
     return (
       <section>
-        <div className="container bg-success">
+        <div className="container">
           <div className="row">
             <div className="col-10 mx-auto col-md-8 mt-5">
-              <h2 className="text-capitalize text-center">
-                Hello from TODOLIST
-              </h2>
+              <h2 className="text-capitalize text-center">Add Item</h2>
               <TodoInput
                 item={this.state.item}
                 handleSubmit={this.handleSubmit}
                 handleChange={this.handleChange}
                 handleEdit={this.handleEdit}
+                editItem={this.state.editItem}
               />
               <TodoList
-                item={this.state.items}
+                items={this.state.items}
                 handleEdit={this.handleEdit}
                 handleDelete={this.handleDelete}
                 clearList={this.clearList}
