@@ -36,7 +36,7 @@ export default class TodoInput extends Component {
             }
             onClick={handleSubmit}
           >
-            {editItem ? "Edit item" : "add item"}
+            {editItem ? "Edit item" : "Add item"}
           </button>
         </form>
       </div>
